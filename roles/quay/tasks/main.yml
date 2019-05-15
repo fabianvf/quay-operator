@@ -1,2 +1,23 @@
 ---
-# tasks file for quay
+
+# Do not modify this file
+
+- name: Running Pre Workload Tasks
+  import_tasks: ./pre_workload.yml
+  become: "{{ become_override | bool }}"
+  when: state == 'present'
+
+- name: Running Workload Tasks
+  import_tasks: ./workload.yml
+  become: "{{ become_override | bool }}"
+  when: state == 'present'
+
+- name: Running Post Workload Tasks
+  import_tasks: ./post_workload.yml
+  become: "{{ become_override | bool }}"
+  when: state == 'present'
+
+- name: Running Workload removal Tasks
+  import_tasks: ./remove_workload.yml
+  become: "{{ become_override | bool }}"
+  when: state == 'absent'
