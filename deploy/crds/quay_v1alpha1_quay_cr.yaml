@@ -1,0 +1,7 @@
+apiVersion: quay.io/v1alpha1
+kind: Quay
+metadata:
+  name: example-quay
+spec:
+  # Add fields here
+  size: 3
