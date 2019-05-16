@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: "{{ _quay_project }}"
+  namespace: "{{ meta.namespace }}"
   name: quay-postgres
   labels:
     quay-component: postgres

@@ -4,14 +4,12 @@ state: present
 become_override: False
 ocp_username: opentlc-mgr
 silent: False
+meta:
+  name: quay
+  namespace: '{{ namespace | default("example") }}'
 
-_quay_project: "gpte-quay"
-_quay_project_display: "Red Hat Quay Registry"
-
-# Access Credentials for Quay.io to pull Red Hat Quay
-# Should be overwritten via Global Variables !!!
-# reference https://access.redhat.com/solutions/3533201
-_quay_dockerconfigjson: "pull_secret"
+# meta.namespace: "gpte-quay"
+# meta.namespace_display: "Red Hat Quay Registry"
 
 # Postgres connection info
 _quay_postgres_admin_password: "quay"

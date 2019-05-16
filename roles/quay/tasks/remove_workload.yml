@@ -3,7 +3,7 @@
 
 - name: Remove Red Hat Quay Registry Project
   k8s:
-    name: "{{ _quay_project }}"
+    name: "{{ meta.namespace }}"
     api_version: v1
     kind: Namespace
     state: absent

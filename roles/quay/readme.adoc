@@ -27,8 +27,8 @@
 * The variable *ocp_username* is mandatory to assign the workload to the correct OpenShift user.
 * A variable *silent=True* can be passed to suppress debug messages.
 * Other variables:
-** *_quay_project*: The name of the project to create and install Red Hat Quay to. Default: `gpte-quay`
-** *_quay_project_display*: The display name of the project. Default: `Red Hat Quay Registry`
+** *meta.namespace*: The name of the project to create and install Red Hat Quay to. Default: `gpte-quay`
+** *meta.namespace_display*: The display name of the project. Default: `Red Hat Quay Registry`
 ** *_quay_postgres_admin_password*: The PostgreSQL admin password.  pgsql is not exposed externally. Default: `quay`
 ** *_quay_postgres_database*: The PostgreSQL Database Red Hat Quay uses. Default: `quay`
 ** *_quay_postgres_user*: The PostgreSQL Database User Red Hat Quay uses. Default: `quay`

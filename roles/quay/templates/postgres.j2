@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: "{{ _quay_project }}"
+  namespace: "{{ meta.namespace }}"
   name: quay-postgres
   labels:
     quay-component: postgres
@@ -12,7 +12,7 @@ spec:
       quay-component: postgres
   template:
     metadata:
-      namespace: "{{ _quay_project }}"
+      namespace: "{{ meta.namespace }}"
       labels:
         quay-component: postgres
     spec:

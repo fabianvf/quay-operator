@@ -2,7 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: quay
-  namespace: "{{ _quay_project }}"
+  namespace: "{{ meta.namespace }}"
   labels:
     quay-component: app
 spec:

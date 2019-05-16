@@ -2,7 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: quay-config
-  namespace: "{{ _quay_project }}"
+  namespace: "{{ meta.namespace }}"
 spec:
   port:
     targetPort: https

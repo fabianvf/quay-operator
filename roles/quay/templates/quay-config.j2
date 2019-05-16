@@ -1,7 +1,7 @@
 AUTHENTICATION_TYPE: Database
 BITTORRENT_FILENAME_PEPPER: f96eefc1-79a5-46c4-905b-9e2fd2b865b5
-BUILDLOGS_REDIS: {host: quay-redis.{{ _quay_project }}.svc.cluster.local, port: 6379}
-DB_URI: postgresql://{{ _quay_postgres_user }}:{{ _quay_postgres_password }}@quay-postgres.{{ _quay_project }}.svc.cluster.local/{{ _quay_postgres_database }}
+BUILDLOGS_REDIS: {host: quay-redis.{{ meta.namespace }}.svc.cluster.local, port: 6379}
+DB_URI: postgresql://{{ _quay_postgres_user }}:{{ _quay_postgres_password }}@quay-postgres.{{ meta.namespace }}.svc.cluster.local/{{ _quay_postgres_database }}
 DEFAULT_TAG_EXPIRATION: 2w
 DISTRIBUTED_STORAGE_CONFIG:
   default:
@@ -38,7 +38,7 @@ MAIL_PORT: 587
 MAIL_USE_TLS: true
 PREFERRED_URL_SCHEME: https
 SECRET_KEY: '{{ _quay_config_secret_key }}'
-SECURITY_SCANNER_ENDPOINT: http://quay-clair.{{ _quay_project }}.svc.cluster.local:6060
+SECURITY_SCANNER_ENDPOINT: http://quay-clair.{{ meta.namespace }}.svc.cluster.local:6060
 SECURITY_SCANNER_ISSUER_NAME: security_scanner
 SERVER_HOSTNAME: {{ _quay_route_location.resources.0.spec.host }}
 SETUP_COMPLETE: true
@@ -49,7 +49,7 @@ TEAM_RESYNC_STALE_TIME: 60m
 TESTING: false
 USERFILES_LOCATION: default
 USERFILES_PATH: userfiles/
-USER_EVENTS_REDIS: {host: quay-redis.{{ _quay_project }}.svc.cluster.local, port: 6379}
+USER_EVENTS_REDIS: {host: quay-redis.{{ meta.namespace }}.svc.cluster.local, port: 6379}
 USE_CDN: false
 V3_UPGRADE_MODE: complete
 
