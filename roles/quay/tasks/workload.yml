@@ -22,7 +22,6 @@
   - ./templates/servicetoken-role.j2
   - ./templates/servicetoken-role-binding.j2
   - ./templates/service.j2
-  # - ./templates/route.j2
 
 - name: Wait for PostgreSQL to deploy
   k8s_facts:
@@ -30,54 +29,42 @@
     label_selectors:
       - quay-component=postgres
   register: quay_postgres_pod
-  until: quay_postgres_pod.resources.0.status.phase == "Running"
+  until: (quay_postgres_pod.resources or default_resource).0.status.phase == "Running"
   retries: 30
   delay: 10
+  vars:
+    default_resource: '{{ [{"status": {"phase": "Unknown"}}]}}'
 
 - name: Add postgresql pod to hosts
   add_host:
     name: '{{ quay_postgres_pod.resources.0.metadata.name }}'
-    groups: postgresql
     ansible_connection: kubectl
     ansible_become: false
-    kubectl_namespace: '{{ meta.namespace }}'
+    ansible_kubectl_namespace: '{{ meta.namespace }}'
 
-- name: Copy sql file to postgres pod
-  copy: 
-    src: quay.sql
-    dest: .
-  delegate_to: postgresql
-
-- name: Restore PostgreSQL db
-  raw: "psql < gpte-quay/quay.sql"
-  delegate_to: postgresql
-
-# - name: Configure Quay for Root privileges
-#   shell: "oc adm policy add-scc-to-user anyuid system:serviceaccount:{{ meta.namespace }}:default"
-
-# - name: Get Quay Route Location
-#   k8s_facts:
-#     kind: Route
-#     label_selectors:
-#       - quay-component=app
-#   register: _quay_route_location
+- name: Set up postgresql DB
+  raw: 'echo "CREATE EXTENSION pg_trgm" | psql -U {{ user }} {{ database }}'
+  vars:
+    user: '{{ _quay_postgres_user }}'
+    database: '{{ _quay_postgres_database }}'
+  delegate_to: '{{ quay_postgres_pod.resources.0.metadata.name }}'
 
 - name: Process Quay Config Template
   template:
     src: ./templates/quay-config.j2
-    dest: /tmp/{{ meta.namespace }}/quay-config.yaml
+    dest: /tmp/{{ meta.namespace }}-quay-config.yaml
 
 - name: Base64 encode Quay Config Template
-  shell: "base64 -w 0 -i /tmp/{{ meta.namespace}}/quay-config.yaml"
+  shell: "base64 -w 0 -i /tmp/{{ meta.namespace}}-quay-config.yaml"
   register: quay_config
 
 - name: Process Clair Config Template
   template:
     src: ./templates/clair-config.j2
-    dest: /tmp/{{ meta.namespace }}/clair-config.yaml
+    dest: /tmp/{{ meta.namespace }}-clair-config.yaml
 
 - name: Base64 encode Clair Config Template
-  shell: "base64 -w 0 -i /tmp/{{ meta.namespace}}/clair-config.yaml"
+  shell: "base64 -w 0 -i /tmp/{{ meta.namespace}}-clair-config.yaml"
   register: clair_config
 
 - name: Create Red Hat Quay Registry
@@ -89,24 +76,23 @@
     definition: "{{ lookup('template', item ) | from_yaml }}"
   loop:
   - ./templates/quay-config-secret.j2
-  - ./templates/clair-config-secret.j2
+  # - ./templates/clair-config-secret.j2
 # This runs quay in 'config' mode
-#  - ./templates/deployment-conf.j2
-#  - ./templates/route-conf.j2
+  - ./templates/deployment-conf.j2
+ # - ./templates/route-conf.j2
 # This runs Quay in 'registry' mode
   - ./templates/deployment.j2
-  - ./templates/clair.j2
-  - ./templates/clair-service.j2
+  # - ./templates/clair.j2
+  # - ./templates/clair-service.j2
 
 - name: Cleanup tmp files
   file: 
     path: "{{ item }}"
     state: absent
   with_items:
-  - /tmp/{{ meta.namespace }}/quay-config.yaml
-  - /tmp/{{ meta.namespace }}/clair-config.yaml
-  - /tmp/{{ meta.namespace }}/quay.sql
-  - /tmp/{{ meta.namespace }}
+  - /tmp/{{ meta.namespace }}-quay-config.yaml
+  - /tmp/{{ meta.namespace }}-clair-config.yaml
+  - /tmp/{{ meta.namespace }}-quay.sql
 
 # Leave this as the last task in the playbook.
 - name: workload tasks complete

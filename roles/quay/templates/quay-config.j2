@@ -40,7 +40,7 @@ PREFERRED_URL_SCHEME: https
 SECRET_KEY: '{{ _quay_config_secret_key }}'
 SECURITY_SCANNER_ENDPOINT: http://quay-clair.{{ meta.namespace }}.svc.cluster.local:6060
 SECURITY_SCANNER_ISSUER_NAME: security_scanner
-SERVER_HOSTNAME: {{ _quay_route_location.resources.0.spec.host }}
+# SERVER_HOSTNAME:  _quay_route_location.resources.0.spec.host 
 SETUP_COMPLETE: true
 SIGNING_ENGINE: gpg2
 SUPER_USERS: [{{ _quay_config_super_users }}]

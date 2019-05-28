@@ -1,5 +1,6 @@
 ---
 # Implement your Pre Workload deployment tasks here
+- import_tasks: certs.yml
 
 # Leave this as the last task in the playbook.
 - name: pre_workload tasks complete

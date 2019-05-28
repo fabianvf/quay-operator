@@ -1,0 +1,60 @@
+---
+
+- name: Root CA
+  block:
+  - openssl_privatekey:
+      path: /tmp/{{ meta.namespace }}-rootCA.key
+      size: 4096
+  - openssl_csr:
+      path: /tmp/{{ meta.namespace }}-rootCA.csr
+      privatekey_path: /tmp/{{ meta.namespace }}-rootCA.key
+      common_name: Quay
+  - openssl_certificate:
+      path: /tmp/{{ meta.namespace }}-rootCA.crt
+      privatekey_path: /tmp/{{ meta.namespace }}-rootCA.key
+      csr_path: /tmp/{{ meta.namespace }}-rootCA.csr
+      provider: selfsigned
+
+- name: Quay Server
+  block:
+  - openssl_privatekey:
+      path: /tmp/{{ meta.namespace }}-quay.key
+      size: 4096
+  - openssl_csr:
+      path: /tmp/{{ meta.namespace }}-quay.csr
+      privatekey_path: /tmp/{{ meta.namespace }}-quay.key
+      common_name: quay.{{ meta.namespace }}.svc.cluster.local
+      email_address: fabian@fabianism.us
+      country_name: US
+      state_or_province_name: New York
+      locality_name: Cazenovia
+      organization_name: Red Hat
+      organizational_unit_name: Quay
+  - openssl_certificate:
+      path: /tmp/{{ meta.namespace }}-quay.crt
+      ownca_privatekey_path: /tmp/{{ meta.namespace }}-rootCA.key
+      ownca_path: /tmp/{{ meta.namespace }}-rootCA.crt
+      csr_path: /tmp/{{ meta.namespace }}-quay.csr
+      provider: ownca
+
+- name: Clair Server
+  block:
+  - openssl_privatekey:
+      path: /tmp/{{ meta.namespace }}-clair.key
+      size: 4096
+  - openssl_csr:
+      path: /tmp/{{ meta.namespace }}-clair.csr
+      privatekey_path: /tmp/{{ meta.namespace }}-clair.key
+      common_name: clair.{{ meta.namespace }}.svc.cluster.local
+      email_address: fabian@fabianism.us
+      country_name: US
+      state_or_province_name: New York
+      locality_name: Cazenovia
+      organization_name: Red Hat
+      organizational_unit_name: clair
+  - openssl_certificate:
+      path: /tmp/{{ meta.namespace }}-clair.crt
+      ownca_privatekey_path: /tmp/{{ meta.namespace }}-rootCA.key
+      ownca_path: /tmp/{{ meta.namespace }}-rootCA.crt
+      csr_path: /tmp/{{ meta.namespace }}-clair.csr
+      provider: ownca

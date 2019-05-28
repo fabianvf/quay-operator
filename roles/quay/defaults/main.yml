@@ -26,7 +26,7 @@ _quay_config_password: "password"
 
 # Variables for quay-config.j2
 _quay_config_secret_key: "change_me"
-_quay_route_location: "route.for.quay"
+# _quay_route_location: "route.for.quay"
 _quay_config_super_users: "opentlcmgr"
 
 # Variables for clair-config.j2

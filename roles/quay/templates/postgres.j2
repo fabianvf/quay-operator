@@ -18,16 +18,13 @@ spec:
     spec:
       containers:
       - name: postgres-master
-        image: image-registry.openshift-image-registry.svc:5000/openshift/postgresql
+        image: postgres:11
         ports:
         - containerPort: 5432
         env:
-        - name: POSTGRESQL_USER
+        - name: POSTGRES_USER
           value: "{{ _quay_postgres_user }}"
-        - name: POSTGRESQL_PASSWORD
+        - name: POSTGRES_PASSWORD
           value: "{{ _quay_postgres_password }}"
-        - name: POSTGRESQL_DATABASE
+        - name: POSTGRES_DB
           value: "{{ _quay_postgres_database }}"
-        - name: POSTGRESQL_ADMIN_PASSWORD
-          value: "{{ _quay_postgres_admin_password }}"
- 

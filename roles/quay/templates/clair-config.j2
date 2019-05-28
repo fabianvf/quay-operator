@@ -15,7 +15,7 @@ clair:
       attempts: 3
       renotifyinterval: 1h
       http:
-        endpoint: https://{{ _quay_route_location.resources.0.spec.host }}/secscan/notify
+        endpoint: https://quay.{{ meta.namespace }}.svc.cluster.local:8443/secscan/notify
         proxy: http://localhost:6063
 jwtproxy:
   signer_proxy:
@@ -42,5 +42,5 @@ jwtproxy:
       key_server:
         type: keyregistry
         options:
-          registry: https://{{ _quay_route_location.resources.0.spec.host }}/keys/
+          registry: https://quay.{{ meta.namespace }}.svc.cluster.local:8443/keys/
 
